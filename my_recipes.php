@@ -1,44 +1,69 @@
-<?php include('includes/header.php'); ?>
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tariflerim</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .recipe-card {
+      margin-bottom: 20px;
+    }
+    .recipe-card .card {
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+  </style>
+</head>
+<body>
 
-<!-- Benim Tariflerim Sayfası - Responsive Bootstrap Yapı -->
-
-<div class="container py-5">
-  <div class="row mb-4">
-    <div class="col text-center">
-      <h1 class="display-5">Tariflerim</h1>
-      <p class="lead">Aşağıda daha önce eklediğiniz tüm tarifleri görebilir, düzenleyebilir veya silebilirsiniz.</p>
-      <a href="add_recipe.php" class="btn btn-success mt-2">+ Yeni Tarif Ekle</a>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="home.php">A Taste of Anatolia</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item"><a class="nav-link" href="home.php">Ana Sayfa</a></li>
+          <li class="nav-item"><a class="nav-link active" href="my_recipes.php">Tariflerim</a></li>
+          <li class="nav-item"><a class="nav-link" href="add_recipe.php">Tarif Ekle</a></li>
+          <li class="nav-item"><a class="nav-link" href="logout.php">Çıkış Yap</a></li>
+        </ul>
+      </div>
     </div>
-  </div>
+  </nav>
 
-  <div class="row g-4">
-    <?php foreach ($recipes as $recipe): ?>
-      <div class="col-12 col-md-6 col-lg-4">
-        <div class="card h-100 shadow-sm rounded-3">
-          <img src="<?php echo htmlspecialchars($recipe['thumb'] ?? 'assets/default.jpg'); ?>" class="card-img-top" alt="Tarif görseli">
-          <div class="card-body d-flex flex-column">
-            <h5 class="card-title"><?php echo htmlspecialchars($recipe['title']); ?></h5>
-            <p class="card-text small text-muted">Oluşturulma: <?php echo date('d.m.Y', strtotime($recipe['created_at'])); ?></p>
-            <div class="mt-auto d-flex justify-content-between">
-              <a href="edit_recipe.php?id=<?php echo $recipe['id']; ?>" class="btn btn-outline-primary btn-sm">Düzenle</a>
-              <a href="delete_recipe.php?id=<?php echo $recipe['id']; ?>" class="btn btn-outline-danger btn-sm" onclick="return confirm('Bu tarifi silmek istediğinize emin misiniz?')">Sil</a>
-            </div>
+  <!-- Tariflerim -->
+  <div class="container py-5">
+    <h2 class="text-center mb-4">Tariflerim</h2>
+    <div class="row">
+      <!-- Örnek Tarif Kartı -->
+      <div class="col-md-6 col-lg-4 recipe-card">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Zeytinyağlı Sarma</h5>
+            <p class="card-text">Asma yaprağı ile yapılan nefis bir tarif...</p>
+            <a href="edit_recipe.php?id=123" class="btn btn-primary btn-sm">Düzenle</a>
+            <a href="delete_recipe.php?id=123" class="btn btn-danger btn-sm">Sil</a>
           </div>
         </div>
       </div>
-    <?php endforeach; ?>
+
+      <!-- Daha fazla tarif PHP ile dinamik olarak buraya eklenecek -->
+    </div>
   </div>
 
-  <?php if (empty($recipes)): ?>
-    <div class="row mt-5">
-      <div class="col text-center">
-        <div class="alert alert-warning" role="alert">
-          Henüz hiç tarif eklemediniz.
-        </div>
-      </div>
+  <!-- Footer -->
+  <footer class="bg-dark text-white text-center py-4">
+    <div class="container">
+      <p>&copy; 2025 A Taste of Anatolia. Tüm hakları saklıdır.</p>
     </div>
-  <?php endif; ?>
+  </footer>
 
-</div>
-
-<?php include('includes/footer.php'); ?>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
