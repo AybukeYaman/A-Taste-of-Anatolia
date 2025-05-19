@@ -1,37 +1,35 @@
-<?php
-// ✅ 1. Oturumu başlat ve bağlantıyı ekle
-session_start();
-include('includes/db.php');
-include('includes/auth.php');
+<?php include('includes/header.php'); ?>
 
-// ✅ 2. Kullanıcı ID'si ve Tarif ID'si kontrolü
-$user_id = $_SESSION['user_id'] ?? null;
-$recipe_id = $_GET['id'] ?? null;
+<!-- Tarif Silme Sayfası - Responsive Bootstrap Yapı -->
 
-// ❗ Eğer kullanıcı giriş yapmamışsa veya tarif ID yoksa yönlendir
-if (!$user_id || !$recipe_id) {
-    header("Location: my_recipes.php");
-    exit();
-}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-6 col-md-8 col-sm-12">
+      <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-body p-5 text-center">
 
-// ✅ 3. Bu tarif gerçekten bu kullanıcıya mı ait?
-$stmt = $conn->prepare("SELECT id FROM recipes WHERE id = ? AND user_id = ?");
-$stmt->bind_param("ii", $recipe_id, $user_id);
-$stmt->execute();
-$result = $stmt->get_result();
+          <h1 class="display-6 mb-4">Tarifi Sil</h1>
+          <p class="lead">Bu tarifi silmek istediğinize emin misiniz?</p>
 
-// ❗ Tarif yoksa ya da başkasına aitse yönlendir
-if ($result->num_rows !== 1) {
-    header("Location: my_recipes.php?error=yetkisiz");
-    exit();
-}
+          <div class="mb-4">
+            <h5 class="fw-bold"><?php echo htmlspecialchars($recipe['title'] ?? ''); ?></h5>
+            <?php if (!empty($recipe['thumb'])): ?>
+              <img src="<?php echo htmlspecialchars($recipe['thumb']); ?>" class="img-fluid rounded my-3" alt="Tarif görseli">
+            <?php endif; ?>
+          </div>
 
-// ✅ 4. Silme işlemini yap
-$delete = $conn->prepare("DELETE FROM recipes WHERE id = ? AND user_id = ?");
-$delete->bind_param("ii", $recipe_id, $user_id);
-$delete->execute();
+          <form action="delete_recipe.php" method="POST">
+            <input type="hidden" name="id" value="<?php echo htmlspecialchars($recipe['id'] ?? ''); ?>">
+            <div class="d-grid gap-2">
+              <button type="submit" name="confirm_delete" class="btn btn-danger btn-lg">Evet, Sil</button>
+              <a href="my_recipes.php" class="btn btn-secondary">Vazgeç</a>
+            </div>
+          </form>
 
-// ✅ 5. Silme başarılı → liste sayfasına başarı mesajı ile dön
-header("Location: my_recipes.php?success=silindi");
-exit();
-?>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<?php include('includes/footer.php'); ?>

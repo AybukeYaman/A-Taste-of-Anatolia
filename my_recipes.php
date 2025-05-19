@@ -1,64 +1,44 @@
-<?php
-session_start();
-include('includes/db.php');
-include('includes/auth.php');
+<?php include('includes/header.php'); ?>
 
-$recipes = [];
+<!-- Benim Tariflerim Sayfası - Responsive Bootstrap Yapı -->
 
-$stmt = $conn->prepare("SELECT * FROM recipes WHERE user_id = ? ORDER BY created_at DESC");
-$stmt->bind_param("i", $_SESSION['user_id']);
-$stmt->execute();
-$result = $stmt->get_result();
+<div class="container py-5">
+  <div class="row mb-4">
+    <div class="col text-center">
+      <h1 class="display-5">Tariflerim</h1>
+      <p class="lead">Aşağıda daha önce eklediğiniz tüm tarifleri görebilir, düzenleyebilir veya silebilirsiniz.</p>
+      <a href="add_recipe.php" class="btn btn-success mt-2">+ Yeni Tarif Ekle</a>
+    </div>
+  </div>
 
-while ($row = $result->fetch_assoc()) {
-    $recipes[] = $row;
-}
-?>
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <title>Tariflerim</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-
-<body class="bg-light">
-<?php include('includes/navbar.php'); ?>
-
-<div class="container mt-5">
-    <h3 class="mb-4">Tariflerim</h3>
-
-    <!-- Silme sonrası bilgi -->
-    <?php if (isset($_GET['success']) && $_GET['success'] === 'silindi'): ?>
-        <div class="alert alert-success">Tarif başarıyla silindi.</div>
-    <?php endif; ?>
-
-    <!-- Tarif yoksa bilgi -->
-    <?php if (empty($recipes)): ?>
-        <div class="alert alert-info">Henüz hiç tarif eklemediniz.</div>
-    <?php else: ?>
-        <div class="row">
-            <?php foreach ($recipes as $recipe): ?>
-                <div class="col-md-6 mb-4">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <h5 class="card-title"><?php echo htmlspecialchars($recipe['title']); ?></h5>
-                            <p class="card-text"><strong>Malzemeler:</strong><br><?php echo nl2br(htmlspecialchars($recipe['ingredients'])); ?></p>
-                            <p class="card-text"><strong>Yapılış:</strong><br><?php echo nl2br(htmlspecialchars($recipe['steps'])); ?></p>
-                            <p class="text-muted"><small>Eklenme Tarihi: <?php echo $recipe['created_at']; ?></small></p>
-                        </div>
-                        <div class="card-footer d-flex justify-content-between align-items-center">
-                            <a href="recipe.php?id=<?php echo $recipe['id']; ?>" class="btn btn-outline-info btn-sm">Detay</a>
-                            <div class="d-flex gap-2">
-                                <a href="edit_recipe.php?id=<?php echo $recipe['id']; ?>" class="btn btn-sm btn-primary">Düzenle</a>
-                                <a href="delete_recipe.php?id=<?php echo $recipe['id']; ?>" class="btn btn-sm btn-danger" onclick="return confirm('Silmek istediğinize emin misiniz?')">Sil</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            <?php endforeach; ?>
+  <div class="row g-4">
+    <?php foreach ($recipes as $recipe): ?>
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="card h-100 shadow-sm rounded-3">
+          <img src="<?php echo htmlspecialchars($recipe['thumb'] ?? 'assets/default.jpg'); ?>" class="card-img-top" alt="Tarif görseli">
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title"><?php echo htmlspecialchars($recipe['title']); ?></h5>
+            <p class="card-text small text-muted">Oluşturulma: <?php echo date('d.m.Y', strtotime($recipe['created_at'])); ?></p>
+            <div class="mt-auto d-flex justify-content-between">
+              <a href="edit_recipe.php?id=<?php echo $recipe['id']; ?>" class="btn btn-outline-primary btn-sm">Düzenle</a>
+              <a href="delete_recipe.php?id=<?php echo $recipe['id']; ?>" class="btn btn-outline-danger btn-sm" onclick="return confirm('Bu tarifi silmek istediğinize emin misiniz?')">Sil</a>
+            </div>
+          </div>
         </div>
-    <?php endif; ?>
+      </div>
+    <?php endforeach; ?>
+  </div>
+
+  <?php if (empty($recipes)): ?>
+    <div class="row mt-5">
+      <div class="col text-center">
+        <div class="alert alert-warning" role="alert">
+          Henüz hiç tarif eklemediniz.
+        </div>
+      </div>
+    </div>
+  <?php endif; ?>
+
 </div>
-</body>
-</html>
+
+<?php include('includes/footer.php'); ?>
