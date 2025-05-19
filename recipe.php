@@ -1,55 +1,96 @@
-<?php
-session_start();
-include('includes/db.php');
-
-$recipe_id = $_GET['id'] ?? null;
-$recipe = null;
-$error = "";
-
-// 1. ID kontrolü
-if (!$recipe_id) {
-    $error = "Tarif bulunamadı.";
-} else {
-    // 2. Tarif detayını çek
-    $stmt = $conn->prepare("SELECT r.*, u.username FROM recipes r JOIN users u ON r.user_id = u.id WHERE r.id = ?");
-    $stmt->bind_param("i", $recipe_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    if ($result->num_rows === 1) {
-        $recipe = $result->fetch_assoc();
-    } else {
-        $error = "Tarif bulunamadı veya silinmiş.";
-    }
-}
-?>
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <title>Tarif Detayı</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tarif Detayı</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .recipe-container {
+      max-width: 800px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+    }
+    .recipe-title {
+      margin-bottom: 25px;
+    }
+    .section-title {
+      margin-top: 30px;
+      font-weight: bold;
+    }
+  </style>
 </head>
+<body>
 
-<body class="bg-light">
-<?php include('includes/navbar.php'); ?>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="home.php">A Taste of Anatolia</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item"><a class="nav-link" href="home.php">Ana Sayfa</a></li>
+          <li class="nav-item"><a class="nav-link" href="my_recipes.php">Tariflerim</a></li>
+          <li class="nav-item"><a class="nav-link" href="add_recipe.php">Tarif Ekle</a></li>
+          <li class="nav-item"><a class="nav-link" href="logout.php">Çıkış Yap</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 
-<div class="container mt-5">
-    <?php if (!empty($error)): ?>
-        <div class="alert alert-danger"><?php echo $error; ?></div>
-    <?php elseif ($recipe): ?>
-        <h2 class="mb-3"><?php echo htmlspecialchars($recipe['title']); ?></h2>
-        <p><strong>Yazan:</strong> <?php echo htmlspecialchars($recipe['username']); ?></p>
-        <hr>
-        <h5>Malzemeler:</h5>
-        <p><?php echo nl2br(htmlspecialchars($recipe['ingredients'])); ?></p>
+  <!-- Tarif Detayı -->
+  <div class="container">
+    <div class="recipe-container">
+      <h2 class="recipe-title">Zeytinyağlı Sarma</h2>
+      <p><strong>Ekleyen:</strong> Aybüke Yaman</p>
 
-        <h5>Yapılış:</h5>
-        <p><?php echo nl2br(htmlspecialchars($recipe['steps'])); ?></p>
+      <div class="section-title">Malzemeler:</div>
+      <ul>
+        <li>Yarım kilo asma yaprağı</li>
+        <li>2 su bardağı pirinç</li>
+        <li>1 adet büyük boy soğan</li>
+        <li>Zeytinyağı, tuz, baharatlar</li>
+      </ul>
 
-        <p class="text-muted"><small>Eklenme Tarihi: <?php echo $recipe['created_at']; ?></small></p>
-        <a href="home.php" class="btn btn-secondary mt-3">← Ana Sayfaya Dön</a>
-    <?php endif; ?>
-</div>
+      <div class="section-title">Yapılış:</div>
+      <p>
+        Soğanları doğrayıp zeytinyağında kavurun. Pirinci ekleyin ve kavurmaya devam edin.
+        Baharatlar ile tatlandırıp soğumaya bırakın. Asma yapraklarına harcı koyup sarın.
+        Tencereye dizin, üzerine limon dilimleri ekleyin ve zeytinyağı gezdirip pişirin.
+      </p>
+
+      <div class="section-title">Yorumlar:</div>
+      <div class="mt-3">
+        <p><strong>Serap:</strong> Denedim, harika oldu! Teşekkürler 💚</p>
+        <p><strong>Ali:</strong> Nefis bir tarif, annemin tarifine çok benziyor.</p>
+      </div>
+
+      <!-- Yorum Ekleme Formu -->
+      <form method="post" action="recipe.php?id=123" class="mt-4">
+        <div class="mb-3">
+          <label for="comment" class="form-label">Yorumunuz</label>
+          <textarea class="form-control" id="comment" name="comment" rows="3" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-success">Yorum Gönder</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-dark text-white text-center py-4 mt-5">
+    <div class="container">
+      <p>&copy; 2025 A Taste of Anatolia. Tüm hakları saklıdır.</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

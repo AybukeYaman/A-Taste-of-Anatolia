@@ -1,45 +1,31 @@
-<?php 
-session_start(); 
-$lang = $_SESSION['lang'] ?? 'tr'; 
-?>
 <!DOCTYPE html>
-<html lang="<?php echo $lang; ?>">
+<html lang="tr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ana Sayfa</title>
-  <link rel="stylesheet" href="assets/style.css">
+  <title>A Taste of Anatolia - Ana Sayfa</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="#">A Taste of Anatolia</a>
+      <div class="collapse navbar-collapse">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="register.php">Kayıt Ol</a></li>
+          <li class="nav-item"><a class="nav-link" href="login.php">Giriş Yap</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 
-<?php include 'includes/navbar.php'; ?>
-
-<div class="container mt-5">
-  <h1 class="text-center mb-4">Hoş Geldiniz!</h1>
-  <div class="row g-4">
-    <div class="col-md-4">
-      <a href="category.php?type=soups" class="btn btn-outline-primary w-100 p-4">Çorbalar</a>
-    </div>
-    <div class="col-md-4">
-      <a href="category.php?type=appetizers" class="btn btn-outline-primary w-100 p-4">Ara Sıcaklar</a>
-    </div>
-    <div class="col-md-4">
-      <a href="category.php?type=mains" class="btn btn-outline-primary w-100 p-4">Ana Yemekler</a>
-    </div>
-    <div class="col-md-4">
-      <a href="diets.php" class="btn btn-outline-success w-100 p-4">Diyet Menüleri</a>
-    </div>
-    <div class="col-md-4">
-      <a href="calories.php" class="btn btn-outline-warning w-100 p-4">Kaç Kalori?</a>
-    </div>
-    <div class="col-md-4">
-      <a href="qa.php" class="btn btn-outline-info w-100 p-4">Soru & Cevap</a>
-    </div>
+  <div class="container py-5 text-center">
+    <h1>Hoşgeldiniz!</h1>
+    <p>En güzel Anadolu tariflerini keşfedin, kendi tariflerinizi paylaşın.</p>
   </div>
-</div>
 
-<script src="assets/main.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <footer class="bg-dark text-white text-center py-3">
+    <p>&copy; 2025 A Taste of Anatolia</p>
+  </footer>
 </body>
 </html>

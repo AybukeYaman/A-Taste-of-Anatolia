@@ -1,64 +1,69 @@
-<?php
-session_start();
-include('includes/db.php');
-include('includes/auth.php');
-
-$recipes = [];
-
-$stmt = $conn->prepare("SELECT * FROM recipes WHERE user_id = ? ORDER BY created_at DESC");
-$stmt->bind_param("i", $_SESSION['user_id']);
-$stmt->execute();
-$result = $stmt->get_result();
-
-while ($row = $result->fetch_assoc()) {
-    $recipes[] = $row;
-}
-?>
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <title>Tariflerim</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tariflerim</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .recipe-card {
+      margin-bottom: 20px;
+    }
+    .recipe-card .card {
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+  </style>
 </head>
+<body>
 
-<body class="bg-light">
-<?php include('includes/navbar.php'); ?>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="home.php">A Taste of Anatolia</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item"><a class="nav-link" href="home.php">Ana Sayfa</a></li>
+          <li class="nav-item"><a class="nav-link active" href="my_recipes.php">Tariflerim</a></li>
+          <li class="nav-item"><a class="nav-link" href="add_recipe.php">Tarif Ekle</a></li>
+          <li class="nav-item"><a class="nav-link" href="logout.php">Çıkış Yap</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 
-<div class="container mt-5">
-    <h3 class="mb-4">Tariflerim</h3>
-
-    <!-- Silme sonrası bilgi -->
-    <?php if (isset($_GET['success']) && $_GET['success'] === 'silindi'): ?>
-        <div class="alert alert-success">Tarif başarıyla silindi.</div>
-    <?php endif; ?>
-
-    <!-- Tarif yoksa bilgi -->
-    <?php if (empty($recipes)): ?>
-        <div class="alert alert-info">Henüz hiç tarif eklemediniz.</div>
-    <?php else: ?>
-        <div class="row">
-            <?php foreach ($recipes as $recipe): ?>
-                <div class="col-md-6 mb-4">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <h5 class="card-title"><?php echo htmlspecialchars($recipe['title']); ?></h5>
-                            <p class="card-text"><strong>Malzemeler:</strong><br><?php echo nl2br(htmlspecialchars($recipe['ingredients'])); ?></p>
-                            <p class="card-text"><strong>Yapılış:</strong><br><?php echo nl2br(htmlspecialchars($recipe['steps'])); ?></p>
-                            <p class="text-muted"><small>Eklenme Tarihi: <?php echo $recipe['created_at']; ?></small></p>
-                        </div>
-                        <div class="card-footer d-flex justify-content-between align-items-center">
-                            <a href="recipe.php?id=<?php echo $recipe['id']; ?>" class="btn btn-outline-info btn-sm">Detay</a>
-                            <div class="d-flex gap-2">
-                                <a href="edit_recipe.php?id=<?php echo $recipe['id']; ?>" class="btn btn-sm btn-primary">Düzenle</a>
-                                <a href="delete_recipe.php?id=<?php echo $recipe['id']; ?>" class="btn btn-sm btn-danger" onclick="return confirm('Silmek istediğinize emin misiniz?')">Sil</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            <?php endforeach; ?>
+  <!-- Tariflerim -->
+  <div class="container py-5">
+    <h2 class="text-center mb-4">Tariflerim</h2>
+    <div class="row">
+      <!-- Örnek Tarif Kartı -->
+      <div class="col-md-6 col-lg-4 recipe-card">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Zeytinyağlı Sarma</h5>
+            <p class="card-text">Asma yaprağı ile yapılan nefis bir tarif...</p>
+            <a href="edit_recipe.php?id=123" class="btn btn-primary btn-sm">Düzenle</a>
+            <a href="delete_recipe.php?id=123" class="btn btn-danger btn-sm">Sil</a>
+          </div>
         </div>
-    <?php endif; ?>
-</div>
+      </div>
+
+      <!-- Daha fazla tarif PHP ile dinamik olarak buraya eklenecek -->
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-dark text-white text-center py-4">
+    <div class="container">
+      <p>&copy; 2025 A Taste of Anatolia. Tüm hakları saklıdır.</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -3,21 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tarifi Sil</title>
+  <title>Kategori - Tarifler</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    body { background-color: #f8f9fa; }
-    .confirm-delete {
-      max-width: 600px;
-      margin: 60px auto;
-      background-color: #fff;
-      padding: 40px;
-      border-radius: 12px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.08);
-      text-align: center;
+    body {
+      background-color: #f8f9fa;
     }
-    .btn-space {
-      margin-right: 10px;
+    .category-section {
+      max-width: 1000px;
+      margin: 40px auto;
+    }
+    .card {
+      box-shadow: 0 0 15px rgba(0,0,0,0.05);
     }
   </style>
 </head>
@@ -34,28 +31,37 @@
         <ul class="navbar-nav">
           <li class="nav-item"><a class="nav-link" href="home.php">Ana Sayfa</a></li>
           <li class="nav-item"><a class="nav-link" href="my_recipes.php">Tariflerim</a></li>
+          <li class="nav-item"><a class="nav-link" href="add_recipe.php">Tarif Ekle</a></li>
           <li class="nav-item"><a class="nav-link" href="logout.php">Çıkış Yap</a></li>
         </ul>
       </div>
     </div>
   </nav>
 
-  <!-- Onay Kutusu -->
-  <div class="container">
-    <div class="confirm-delete">
-      <h2>Bu tarifi silmek istediğinizden emin misiniz?</h2>
-      <p>Silme işlemi geri alınamaz. Lütfen dikkatli olun.</p>
-      <form method="post" action="delete_recipe.php">
-        <input type="hidden" name="recipe_id" value="123">
-        <button type="submit" class="btn btn-danger btn-lg btn-space">Evet, Sil</button>
-        <a href="my_recipes.php" class="btn btn-secondary btn-lg">Vazgeç</a>
-      </form>
+  <!-- Kategori Tarifleri -->
+  <div class="container category-section">
+    <h2 class="mb-4 text-center">Kategori: Zeytinyağlılar</h2>
+    <div class="row">
+      <!-- Örnek Tarif Kartı -->
+      <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Zeytinyağlı Sarma</h5>
+            <p class="card-text">Asma yaprağı ile yapılan geleneksel tarif...</p>
+            <a href="recipe.php?id=123" class="btn btn-outline-primary btn-sm">Tarifi Gör</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- PHP ile diğer tarifler burada listelenebilir -->
     </div>
   </div>
 
   <!-- Footer -->
-  <footer class="mt-5 bg-dark text-white text-center py-3">
-    <p>&copy; 2025 A Taste of Anatolia. Tüm hakları saklıdır.</p>
+  <footer class="bg-dark text-white text-center py-4 mt-5">
+    <div class="container">
+      <p>&copy; 2025 A Taste of Anatolia. Tüm hakları saklıdır.</p>
+    </div>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
