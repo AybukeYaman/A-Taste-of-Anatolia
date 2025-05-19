@@ -1,78 +1,45 @@
-<?php
-// Oturum başlat (her zaman ilk satırda)
-session_start();
-include('includes/db.php');
+<?php include('includes/header.php'); ?>
 
-$error = "";
+<!-- Giriş Sayfası - Responsive Bootstrap Yapı -->
 
-// Form gönderildiyse
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = trim($_POST['email']);
-    $password = trim($_POST['password']);
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-6 col-md-8 col-sm-12">
+      <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-body p-5">
 
-    if (empty($email) || empty($password)) {
-        $error = "Lütfen tüm alanları doldurun.";
-    } else {
-        $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
-        $stmt->bind_param("s", $email);
-        $stmt->execute();
-        $result = $stmt->get_result();
+          <h1 class="text-center mb-4 display-5">Giriş Yap</h1>
 
-        if ($result->num_rows == 1) {
-            $user = $result->fetch_assoc();
+          <form action="login.php" method="POST" novalidate>
 
-            if (password_verify($password, $user['password'])) {
-                $_SESSION['user_id'] = $user['id'];
-                $_SESSION['username'] = $user['name']; // 🔥 navbar'da gösterilecek
+            <!-- E-posta -->
+            <div class="mb-3">
+              <label for="email" class="form-label">E-posta</label>
+              <input type="email" class="form-control" id="email" name="email" placeholder="ornek@mail.com" required>
+            </div>
 
-                header("Location: home.php");
-                exit();
-            } else {
-                $error = "Hatalı şifre.";
-            }
-        } else {
-            $error = "Böyle bir kullanıcı bulunamadı.";
-        }
-    }
-}
-?>
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <title>Giriş Yap</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
+            <!-- Şifre -->
+            <div class="mb-4">
+              <label for="password" class="form-label">Şifre</label>
+              <input type="password" class="form-control" id="password" name="password" required>
+            </div>
 
-<body class="bg-light">
-<?php include('includes/navbar.php'); ?>
+            <!-- Giriş Butonu -->
+            <div class="d-grid">
+              <button type="submit" class="btn btn-primary btn-lg">Giriş Yap</button>
+            </div>
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-5">
-            <h3 class="text-center mb-4">Giriş Yap</h3>
+            <!-- Şifre Unuttum ve Kayıt -->
+            <div class="text-center mt-3">
+              <small><a href="reset_password.php">Şifremi unuttum</a> | <a href="register.php">Kayıt Ol</a></small>
+            </div>
 
-            <!-- Hata mesajı -->
-            <?php if (!empty($error)): ?>
-                <div class="alert alert-danger"><?php echo $error; ?></div>
-            <?php endif; ?>
+          </form>
 
-            <!-- Giriş formu -->
-            <form method="POST" action="">
-                <div class="mb-3">
-                    <label class="form-label">E-Posta</label>
-                    <input type="email" name="email" class="form-control" required>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Şifre</label>
-                    <input type="password" name="password" class="form-control" required>
-                </div>
-
-                <button type="submit" class="btn btn-primary w-100">Giriş Yap</button>
-            </form>
         </div>
+      </div>
     </div>
+  </div>
 </div>
-</body>
-</html>
+
+<?php include('includes/footer.php'); ?>

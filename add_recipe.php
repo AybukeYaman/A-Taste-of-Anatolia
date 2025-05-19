@@ -1,77 +1,60 @@
-<?php
-session_start();
-include('includes/db.php');
-include('includes/auth.php');
+<?php include('includes/header.php'); ?>
 
-$error = "";
-$success = "";
+<!-- Tarif Ekle Sayfası - Responsive Bootstrap Yapı -->
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $title = trim($_POST['title']);
-    $ingredients = trim($_POST['ingredients']);
-    $steps = trim($_POST['steps']);
-    $user_id = $_SESSION['user_id'] ?? null;
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10 col-sm-12">
+      <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-body p-4">
 
-    if (empty($title) || empty($ingredients) || empty($steps)) {
-        $error = "Lütfen tüm alanları doldurun.";
-    } elseif (!$user_id) {
-        $error = "Lütfen giriş yapın.";
-    } else {
-        $stmt = $conn->prepare("INSERT INTO recipes (user_id, title, ingredients, steps, created_at) VALUES (?, ?, ?, ?, NOW())");
-        $stmt->bind_param("isss", $user_id, $title, $ingredients, $steps);
+          <h1 class="text-center mb-4 display-5">Yeni Tarif Ekle</h1>
 
-        if ($stmt->execute()) {
-            $success = "Tarif başarıyla eklendi!";
-        } else {
-            $error = "Bir hata oluştu: " . $conn->error;
-        }
-    }
-}
-?>
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <title>Tarif Ekle</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
+          <form action="add_recipe.php" method="POST" enctype="multipart/form-data" novalidate>
 
-<body class="bg-light">
-<?php include('includes/navbar.php'); ?>
+            <!-- Tarif Başlığı -->
+            <div class="mb-3">
+              <label for="title" class="form-label fw-semibold">Tarif Başlığı</label>
+              <input type="text" class="form-control" name="title" id="title" placeholder="Örneğin: Mercimek Çorbası" required>
+            </div>
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-7">
-            <h3 class="mb-4 text-center">Yeni Tarif Ekle</h3>
+            <!-- Malzemeler -->
+            <div class="mb-3">
+              <label for="ingredients" class="form-label fw-semibold">Malzemeler</label>
+              <textarea class="form-control" name="ingredients" id="ingredients" rows="4" placeholder="Her satıra bir malzeme yazın" required></textarea>
+            </div>
 
-            <?php if (!empty($success)): ?>
-                <div class="alert alert-success"><?php echo $success; ?></div>
-            <?php endif; ?>
+            <!-- Hazırlanışı -->
+            <div class="mb-3">
+              <label for="steps" class="form-label fw-semibold">Hazırlık Aşamaları</label>
+              <textarea class="form-control" name="steps" id="steps" rows="6" placeholder="Tarifi adım adım anlatın" required></textarea>
+            </div>
 
-            <?php if (!empty($error)): ?>
-                <div class="alert alert-danger"><?php echo $error; ?></div>
-            <?php endif; ?>
+            <!-- Görsel -->
+            <div class="mb-3">
+              <label for="image" class="form-label">Tarif Fotoğrafı</label>
+              <input class="form-control" type="file" name="image" id="image" accept="image/*">
+            </div>
 
-            <form method="POST" action="">
-                <div class="mb-3">
-                    <label class="form-label">Tarif Başlığı</label>
-                    <input type="text" name="title" class="form-control" placeholder="Örn: Çikolatalı Kek" required>
-                </div>
+            <!-- Video (isteğe bağlı) -->
+            <div class="mb-3">
+              <label for="video" class="form-label">Video (İsteğe Bağlı)</label>
+              <input class="form-control" type="file" name="video" id="video" accept="video/*">
+            </div>
 
-                <div class="mb-3">
-                    <label class="form-label">Malzemeler</label>
-                    <textarea name="ingredients" class="form-control" rows="4" placeholder="Her satıra bir malzeme" required></textarea>
-                </div>
+            <!-- Kaydet Butonu -->
+            <div class="d-grid mt-4">
+              <button type="submit" class="btn btn-success btn-lg">Tarifi Kaydet</button>
+            </div>
+          </form>
 
-                <div class="mb-3">
-                    <label class="form-label">Yapılış Adımları</label>
-                    <textarea name="steps" class="form-control" rows="5" placeholder="Tarifin hazırlanışı" required></textarea>
-                </div>
-
-                <button type="submit" class="btn btn-success w-100">Tarifi Ekle</button>
-            </form>
         </div>
+      </div>
     </div>
+  </div>
 </div>
-</body>
-</html>
+
+<!-- Mobil ve tablet uyumu için boşluk ekle -->
+<div class="my-5"></div>
+
+<?php include('includes/footer.php'); ?>
